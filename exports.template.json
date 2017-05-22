@@ -1,0 +1,36 @@
+{
+  "exports": [
+    {
+      // Name of the element to export from the AI document.
+      "artboard": "artboard-name", // Either an artboard (can be its name or its index)
+      "slice": "slice-name", // Or a slice.
+
+      // Name of the output file (extension will be added automatically)
+      "outputName": "",
+
+      // Size of the output image.
+      // If both outputWidth and outputHeight are not specified, the source will be exported in its natural size.false
+      // If either outputWidth and outputHeight is not specified, the aspect ratio will be conserved for the output image.
+      // If both are specified, the specified size will be respected.
+      "outputWidth": 48,
+      "outputHeight": 48,
+
+      // If present, the source must be exported for the web.
+      "web": {
+
+      },
+
+      // If present, the source must be exported for android.
+      "android": {
+
+      },
+
+      // If present, the source must be exported for ios.
+      "ios": {
+
+      }
+    }
+  ],
+  "options": {
+  }
+}
