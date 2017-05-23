@@ -5,7 +5,7 @@ import _ from "underscore/underscore.js";
 /**
  * Simple exporter that allows to export artboard as common image formats (jpeg, png).
  */
-export class SimpleArtboardExporter extends ArtboardExporter {
+export default class SimpleArtboardExporter extends ArtboardExporter {
 
     /**
      *
