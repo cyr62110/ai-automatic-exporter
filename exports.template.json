@@ -8,8 +8,12 @@
       // Name of the output file (extension will be added automatically)
       "outputName": "",
 
+      // Image format to export to.
+      // Supported formats are: jpeg, png
+      "outputFormat": "",
+
       // Size of the output image.
-      // If both outputWidth and outputHeight are not specified, the source will be exported in its natural size.false
+      // If both outputWidth and outputHeight are not specified, the source will be exported in its natural size.
       // If either outputWidth and outputHeight is not specified, the aspect ratio will be conserved for the output image.
       // If both are specified, the specified size will be respected.
       "outputWidth": 48,
