@@ -1,5 +1,11 @@
 export default class Result {
 
+    /**
+     * Default constructor for Result.
+     * @param {string} element Element that we were processing.
+     * @param {boolean} success true if the element has been fully processed, false otherwise.
+     * @param {string} message a message indicating the cause of the error.
+     */
     constructor(element, success, message) {
         this._element = element;
         this._success = success;
