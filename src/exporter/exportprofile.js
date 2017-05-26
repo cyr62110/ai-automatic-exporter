@@ -12,6 +12,20 @@ export default class ExportProfile {
     }
 
     /**
+     * Clone this export profile
+     * @return {ExportProfile} a clone of this export profile.
+     */
+    clone() {
+        let exportProfile = new ExportProfile();
+        exportProfile._source = this._source;
+        exportProfile._outputFormat = this._outputFile;
+        exportProfile._outputWidth = this._outputWidth;
+        exportProfile._outputHeight = this._outputHeight;
+        exportProfile._outputFormat = this._outputFormat;
+        return exportProfile;
+    }
+
+    /**
      * Returns the object (Artboard, Slice, etc.) that should be exported as an image.
      */
     getSource() {

@@ -6,7 +6,8 @@ import ExportProfile from "../exporter/exportprofile";
 
 export default class ConfigManager {
 
-    constructor() {
+    constructor(document) {
+        this._document = document;
         this._configurers = {};
 
         this._configPath = null;
@@ -98,8 +99,37 @@ export default class ConfigManager {
     _parseExportProfile(exportConfig) {
         let exportProfile = new ExportProfile();
 
-        if ()
+        let sourceName = exportConfig["artboard"];
+        if (sourceName !== undefined) {
+            let artboard = document.artboards.getByName(sourceName);
+            if (artboard === null) {
+                return Result.error("config", `Artboard ${sourceName} does not exists in current document.`);
+            }
+            exportProfile.setSource(artboard);
+        } else {
+            sourceName = exportConfig["slice"];
+            if (sourceName !== undefined) {
+                return Result.error("config", "slice cannot be exported on this version. Look after an update of the plugin.");
+            }
+        }
 
+        let outputFormat = exportConfig["outputFormat"];
+        if (outputFormat === undefined) {
+            return Result.error("config", `No ouput format configured to export source '${sourceName}'`);
+        }
+        exportProfile.setOutputFormat(outputFormat);
+
+        let outputHeight = exportConfig["outputHeight"];
+        if (outputHeight !== undefined) {
+            exportProfile.setOutputHeight(outputHeight);
+        }
+
+        let outputWidth = exportConfig["outputWidth"];
+        if (outputWidth !== undefined) {
+            exportProfile.setOutputWidth(outputWidth);
+        }
+
+        this._exportProfiles.push(exportProfile);
         return Result.success("config");
     }
 
