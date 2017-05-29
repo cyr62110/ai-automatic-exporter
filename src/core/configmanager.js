@@ -6,13 +6,34 @@ import ExportProfile from "../exporter/exportprofile";
 
 export default class ConfigManager {
 
-    constructor(document) {
-        this._document = document;
-        this._configurers = {};
+    constructor() {
+        this._document = null;
+        this._exportProfileBuilders = [];
 
         this._configPath = null;
+        this._outputDir = null;
+
         this._config = null;
         this._exportProfiles = [];
+    }
+
+    /**
+     * Register an export profile builder that will convert the configuration into usable export profiles.
+     * @param {ExportProfileBuilder} an export profile builder
+     */
+    registerExportProfileBuilder(exportProfileBuilder) {
+        if (exportProfileBuilder.getName() === undefined || exportProfileBuilder.getName() === null) {
+            throw "Export profile builder must provide a name to be registered.";
+        }
+        this._exportProfileBuilders.push(exportProfileBuilder);
+    }
+
+    /**
+     * Set the document from which the images will be exported.
+     * @param {Document} document document from which the images will be exported.
+     */
+    setDocument(document) {
+        this._document = document;
     }
 
     /**
@@ -21,6 +42,14 @@ export default class ConfigManager {
      */
     setConfigPath(configPath) {
         this._configPath = configPath;
+    }
+
+    /**
+     * Set the directory in which the images must be exported.
+     * @param {File} outputDir directory where the images must be exported.
+     */
+    setOutputDir(outputDir) {
+        this._outputDir = outputDir;
     }
 
     /**
@@ -101,7 +130,7 @@ export default class ConfigManager {
 
         let sourceName = exportConfig["artboard"];
         if (sourceName !== undefined) {
-            let artboard = document.artboards.getByName(sourceName);
+            let artboard = this._document.artboards.getByName(sourceName);
             if (artboard === null) {
                 return Result.error("config", `Artboard ${sourceName} does not exists in current document.`);
             }
@@ -111,6 +140,11 @@ export default class ConfigManager {
             if (sourceName !== undefined) {
                 return Result.error("config", "slice cannot be exported on this version. Look after an update of the plugin.");
             }
+        }
+
+        let outputName = exportConfig["outputName"];
+        if (outputName === undefined) {
+            outputName = sourceName;
         }
 
         let outputFormat = exportConfig["outputFormat"];
@@ -129,14 +163,16 @@ export default class ConfigManager {
             exportProfile.setOutputWidth(outputWidth);
         }
 
-        this._exportProfiles.push(exportProfile);
-        return Result.success("config");
-    }
-
-    /**
-     * Returns the config
-     */
-    get() {
-        return this._config;
+        return _(this._exportProfileBuilders).chain()
+            .filter((builder) => { return exportConfig[builder.getName().toLowerCase()] !== undefined })
+            .map((builder) => {
+                var builderConfig = exportConfig[builder.getName().toLowerCase()];
+                return builder.build(exportProfile, outputName, this._outputDir, builderConfig, this._exportProfiles);
+            })
+            .reduce((results, result) => {
+                results.add(result);
+                return results;
+            }, Results())
+            .value();
     }
 }
