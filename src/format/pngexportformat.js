@@ -13,4 +13,8 @@ export default class PngExportFormat extends ExportFormat {
     getDefaultExportOptions() {
         return new ExportOptionsPNG24();
     }
+
+    getExtension() {
+        return 'png';
+    }
 }

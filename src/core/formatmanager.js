@@ -16,6 +16,19 @@ export default class FormatManager {
     }
 
     /**
+     * Returns the file extension associated with the provided format.
+     * @param {string} format Name of the format.
+     * @return {string} file extension associated with the format.
+     */
+    getExtension(formatName) {
+        let exportFormat = this.getExportFormatForName(formatName);
+        if (exportFormat !== null) {
+            return exportFormat.getExtension();
+        }
+        return null;
+    }
+
+    /**
      * Register a new export format.
      * @param {ExportFormat} exportFormat export format to register.
      */

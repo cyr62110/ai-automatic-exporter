@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = {
     entry: [
+        './lib/es5-essdk-shim.js',
         './lib/es5-shim.js',
         './src/index.js'
     ],

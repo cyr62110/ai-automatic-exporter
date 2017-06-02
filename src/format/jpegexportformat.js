@@ -13,4 +13,8 @@ export default class JpegExportFormat extends ExportFormat {
     getDefaultExportOptions() {
         return new ExportOptionsJPEG();
     }
+
+    getExtension() {
+        return 'jpg';
+    }
 }

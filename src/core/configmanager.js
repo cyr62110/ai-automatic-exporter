@@ -11,7 +11,7 @@ export default class ConfigManager {
         this._exportProfileBuilders = [];
 
         this._configPath = null;
-        this._outputDir = null;
+        this._baseOutputDir = null;
 
         this._config = null;
         this._exportProfiles = [];
@@ -26,6 +26,9 @@ export default class ConfigManager {
             throw "Export profile builder must provide a name to be registered.";
         }
         this._exportProfileBuilders.push(exportProfileBuilder);
+        if (this._baseOutputDir !== null) {
+            exportProfileBuilder.setBaseOutputDir(this._baseOutputDir);
+        }
     }
 
     /**
@@ -45,11 +48,14 @@ export default class ConfigManager {
     }
 
     /**
-     * Set the directory in which the images must be exported.
-     * @param {File} outputDir directory where the images must be exported.
+     * Set the base directory in which all the images will be exported.
+     * @param {File} baseOutputDir base directory where all the images will be exported.
      */
-    setOutputDir(outputDir) {
-        this._outputDir = outputDir;
+    setBaseOutputDir(baseOutputDir) {
+        this._baseOutputDir = baseOutputDir;
+        _(this._exportProfileBuilders).forEach((builder) => {
+            builder.setBaseOutputDir(baseOutputDir);
+        });
     }
 
     /**
@@ -146,6 +152,7 @@ export default class ConfigManager {
         if (outputName === undefined) {
             outputName = sourceName;
         }
+        exportProfile.setOutputName(outputName);
 
         let outputFormat = exportConfig["outputFormat"];
         if (outputFormat === undefined) {
@@ -167,12 +174,12 @@ export default class ConfigManager {
             .filter((builder) => { return exportConfig[builder.getName().toLowerCase()] !== undefined })
             .map((builder) => {
                 var builderConfig = exportConfig[builder.getName().toLowerCase()];
-                return builder.build(exportProfile, outputName, this._outputDir, builderConfig, this._exportProfiles);
+                return builder.build(exportProfile, outputName, this._baseOutputDir, builderConfig, this._exportProfiles);
             })
             .reduce((results, result) => {
                 results.add(result);
                 return results;
-            }, Results())
+            }, new Results())
             .value();
     }
 }

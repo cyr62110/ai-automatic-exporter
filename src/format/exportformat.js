@@ -5,7 +5,7 @@ export default class ExportFormat {
      * @return {Array} Array of names
      */
     getFormatNames() {
-
+        return [];
     }
 
     /**
@@ -13,7 +13,7 @@ export default class ExportFormat {
      * @return {ExportType} One of the ExportType enum value.
      */
     getExportType() {
-
+        return null;
     }
 
     /**
@@ -21,6 +21,14 @@ export default class ExportFormat {
      * @return {any} an instance of the various ExportOptions.
      */
     getDefaultExportOptions() {
+        return null;
+    }
 
+    /**
+     * Returns the file extension associated with this format.
+     * @return {string} file extension associated with this format.
+     */
+    getExtension() {
+        return null;
     }
 }

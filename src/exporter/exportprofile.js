@@ -5,6 +5,7 @@ export default class ExportProfile {
 
     constructor() {
         this._source = null;
+        this._outputName = null;
         this._outputFile = null;
         this._outputWidth = null;
         this._outputHeight = null;
@@ -18,7 +19,8 @@ export default class ExportProfile {
     clone() {
         let exportProfile = new ExportProfile();
         exportProfile._source = this._source;
-        exportProfile._outputFormat = this._outputFile;
+        exportProfile._outputName = this._outputName;
+        exportProfile._outputFile = this._outputFile;
         exportProfile._outputWidth = this._outputWidth;
         exportProfile._outputHeight = this._outputHeight;
         exportProfile._outputFormat = this._outputFormat;
@@ -34,6 +36,17 @@ export default class ExportProfile {
 
     setSource(source) {
         this._source = source;
+    }
+
+    /**
+     * Returns the name of the file in which the image should be exported
+     */
+    getOutputName() {
+        return this._outputName;
+    }
+
+    setOutputName(outputName) {
+        this._outputName = outputName;
     }
 
     /**
