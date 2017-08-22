@@ -34,6 +34,8 @@ export default class WebExportProfileBuilder extends ExportProfileBuilder {
 
         webExportProfile.setOutputFile(new File(outputFileURI));
 
+        exportProfiles.push(webExportProfile);
+
         return Result.success(baseExportProfile.getOutputName());
     }
 

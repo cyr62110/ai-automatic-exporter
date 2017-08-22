@@ -17,6 +17,10 @@ export default class Results {
         });
     }
 
+    isError() {
+        return !this.isSuccess();
+    }
+
     /**
      * Returns all messages
      * @return {string} All result messages concatenated.

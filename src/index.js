@@ -1,26 +1,55 @@
+import _ from "underscore/underscore"
 import FormatManager from "./core/formatmanager";
 import JpegExportFormat from "./format/jpegexportformat";
 import PngExportFormat from "./format/pngexportformat";
 import ExporterManager from "./core/exportermanager";
-import {SimpleArtboardExporter} from "./exporter/artboard/simpleartboardexporter";
-import ExportProfile from "./exporter/exportprofile";
+import SimpleArtboardExporter from "./exporter/artboard/simpleartboardexporter";
+import ConfigManager from "./core/configmanager";
+import WebExportProfileBuilder from "./config/webexportprofilebuilder";
+import Results from "./utils/results";
 
-if (app.activeDocument === null) {
-    Window.alert("Make sure you have an active document before launching export script.");
+function main()
+{
+    if (app.activeDocument === null) {
+        Window.alert("Make sure you have an active document before launching export script.");
+        return;
+    }
+
+    let formatManager = new FormatManager();
+    formatManager.registerExportFormat(new JpegExportFormat());
+    formatManager.registerExportFormat(new PngExportFormat());
+
+    let exporterManager = new ExporterManager();
+    exporterManager.registerExporter(new SimpleArtboardExporter(formatManager));
+
+    let configManager = new ConfigManager();
+    configManager.registerExportProfileBuilder(new WebExportProfileBuilder(formatManager));
+    configManager.setDocument(app.activeDocument);
+    configManager.setConfigPath("/Users/cyr62110/Documents/Projets/fftcg-deck-master-graphics/raw/exports.json");
+    configManager.setBaseOutputDir(new File("/Users/cyr62110/Desktop/exports"));
+
+    let configResult = configManager.load();
+    if (configResult.isError()) {
+        Window.alert(configResult.toString());
+        return;
+    }
+
+    let exportResults = _(configManager.getExportProfiles()).chain()
+        .map((exportProfile) => {
+            Window.alert(exportProfile.getSource());
+            let exporter = exporterManager.getExporterForProfile(exportProfile);
+            if (exporter === null) {
+                return Result.error(exportProfile.getSource(), "Cannot find an exporter");
+            }
+            return exporter.exportAsFile(exportProfile);
+        })
+        .reduce((results, result) => {
+            results.add(result);
+            return results;
+        }, new Results())
+        .value();
+
+    Window.alert(exportResults.toString());
 }
 
-let formatManager = new FormatManager();
-formatManager.registerExportFormat(new JpegExportFormat());
-formatManager.registerExportFormat(new PngExportFormat());
-
-let exporterManager = new ExporterManager();
-exporterManager.registerExporter(new SimpleArtboardExporter(formatManager));
-
-let exportProfile = new ExportProfile();
-exportProfile.setSource(app.activeDocument.artboards.getByName("fire"));
-exportProfile.setOutputFormat("jpg");
-exportProfile.setOutputFile(new File("/Users/cyr62110/Desktop/test.jpg"));
-
-let exporter = exporterManager.getExporterForProfile(exportProfile);
-let result = exporter.exportAsFile(exportProfile);
-Window.alert(result.toString());
+main();

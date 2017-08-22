@@ -173,13 +173,22 @@ export default class ConfigManager {
         return _(this._exportProfileBuilders).chain()
             .filter((builder) => { return exportConfig[builder.getName().toLowerCase()] !== undefined })
             .map((builder) => {
-                var builderConfig = exportConfig[builder.getName().toLowerCase()];
-                return builder.build(exportProfile, outputName, this._baseOutputDir, builderConfig, this._exportProfiles);
+                let builderConfig = exportConfig[builder.getName().toLowerCase()];
+                return builder.build(exportProfile, builderConfig, this._exportProfiles);
             })
             .reduce((results, result) => {
                 results.add(result);
                 return results;
             }, new Results())
             .value();
+    }
+
+    /**
+     * Returns the export profile parsed from the configuration.
+     *
+     * @return {Array<ExportProfile>} Export profiles created from the configuration file.
+     */
+    getExportProfiles() {
+        return this._exportProfiles;
     }
 }
