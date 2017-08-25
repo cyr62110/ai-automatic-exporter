@@ -34,20 +34,7 @@ function main()
         return;
     }
 
-    let exportResults = _(configManager.getExportProfiles()).chain()
-        .map((exportProfile) => {
-            Window.alert(exportProfile.getSource());
-            let exporter = exporterManager.getExporterForProfile(exportProfile);
-            if (exporter === null) {
-                return Result.error(exportProfile.getSource(), "Cannot find an exporter");
-            }
-            return exporter.exportAsFile(exportProfile);
-        })
-        .reduce((results, result) => {
-            results.add(result);
-            return results;
-        }, new Results())
-        .value();
+
 
     Window.alert(exportResults.toString());
 }

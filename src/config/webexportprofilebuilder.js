@@ -1,5 +1,5 @@
 import ExportProfileBuilder from "./exportprofilebuilder";
-import URI from "urijs/src/URI";
+import URI from "urijs/src/URI"; // required for URITemplate
 import URITemplate from "urijs/src/URITemplate";
 import Result from "../utils/result";
 

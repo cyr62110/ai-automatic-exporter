@@ -2,14 +2,13 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-    entry: [
-        './lib/es5-essdk-shim.js',
-        './lib/es5-shim.js',
-        './src/index.js'
-    ],
+    entry: {
+        "ai-automatic-exporter": ['./lib/es5-essdk-shim.js', './lib/es5-shim.js', './src/index.js'],
+        "ai-automatic-exporter-no-ui": ['./lib/es5-essdk-shim.js', './lib/es5-shim.js', './src/index-auto.js']
+    },
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'ai-automatic-exporter.jsx'
+        filename: '[name].jsx'
     },
     module: {
         rules: [
